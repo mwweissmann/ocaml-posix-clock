@@ -1,0 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: c4c065ebd4ed88f11fc3ae8c4367d59a)
+version = "0.3.0"
+description = "POSIX clocks"
+requires = "result posix-time unix"
+archive(byte) = "posix-clock.cma"
+archive(byte, plugin) = "posix-clock.cma"
+archive(native) = "posix-clock.cmxa"
+archive(native, plugin) = "posix-clock.cmxs"
+exists_if = "posix-clock.cma"
+# OASIS_STOP
+

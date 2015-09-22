@@ -1,0 +1,38 @@
+OASISFormat: 0.4
+Name:        posix-clock
+Version:     0.3.0
+Synopsis:    POSIX clocks
+Authors:     Markus W. Weissmann <markus.weissmann@in.tum.de>
+Maintainers: Markus W. Weissmann <markus.weissmann@in.tum.de>
+Homepage:    https://github.com/mwweissmann/ocaml-posix-clock/
+License:     MIT
+Plugins:     META (0.4)
+
+Library "posix-clock"
+  Path:                 src/
+  BuildTools:           ocamlbuild
+  Modules:              Posix_clock
+  CSources:             clock.c
+  CCLib:                -lrt
+  CCOpt:                -O2 -Wall -Wextra -Wno-unused-parameter
+  BuildDepends:         result, posix-time, unix
+
+Document "api"
+  Title:                API reference for POSIX clock
+  Type:                 ocamlbuild (0.4)
+  Install:              false
+  BuildTools:           ocamlbuild, ocamldoc
+  Format:               HTML
+  Index:                index.html
+  XOCamlbuildPath:      src/
+  XOCamlbuildLibraries: posix-clock
+
+Executable "test"
+  Path:                 test/
+  MainIs:               test.ml
+  BuildDepends:         posix-clock
+  CompiledObject:       best
+  BuildTools:           ocamlbuild
+  Install:              false
+  Build:                true
+
