@@ -15,6 +15,8 @@
 #include <caml/fail.h>
 #include <caml/unixsupport.h>
 
+#include <posix-time/posix-time.h>
+
 #define Val_none Val_int(0)
 
 static value Val_some_int(int i) {   
@@ -160,12 +162,8 @@ CAMLprim value time_clock_gettime(value clock) {
     goto ERROR;
   }
 
-  pair = caml_alloc(2, 0);
-  Store_field(pair, 0, caml_copy_int64(time.tv_sec));
-  Store_field(pair, 1, caml_copy_int64(time.tv_nsec));
-
   result = caml_alloc(1, 0); // Result.Ok
-  Store_field(result, 0, pair);
+  Store_field(result, 0, val_timespec(time));
   goto END;
 
 ERROR:
@@ -199,12 +197,8 @@ CAMLprim value time_clock_getres(value clock) {
     goto ERROR;
   }
 
-  pair = caml_alloc(2, 0);
-  Store_field(pair, 0, caml_copy_int64(time.tv_sec));
-  Store_field(pair, 1, caml_copy_int64(time.tv_nsec));
-
   result = caml_alloc(1, 0); // Result.Ok
-  Store_field(result, 0, pair);
+  Store_field(result, 0, val_timespec(time));
   goto END;
 
 ERROR:
@@ -228,9 +222,7 @@ CAMLprim value time_clock_settime(value clock, value t) {
   int rc;
 
   clk = Int_val(clock);
-
-  time.tv_sec = Int64_val(Field(t, 0));
-  time.tv_nsec = Int64_val(Field(t, 1));
+  time = timespec_val(t);
 
   caml_release_runtime_system();
   rc = clock_settime(clk, &time);
@@ -258,14 +250,13 @@ END:
 
 CAMLprim value time_nanosleep(value time) {
   CAMLparam1(time);
-  CAMLlocal3(result, pair, rtime);
+  CAMLlocal2(result, pair);
   struct timespec time_in;
   struct timespec time_out;
   int lerrno;
   int rc;
 
-  time_in.tv_sec = Int64_val(Field(time, 0));
-  time_in.tv_nsec = Int64_val(Field(time, 1));
+  time_in = timespec_val(time);
   time_out.tv_sec = time_out.tv_nsec = 0;
 
   caml_release_runtime_system();
@@ -284,12 +275,8 @@ CAMLprim value time_nanosleep(value time) {
   goto END;
 
 INTERRUPTED:
-  rtime = caml_alloc(2, 0);
-  Store_field(rtime, 0, caml_copy_int64(time_out.tv_sec));
-  Store_field(rtime, 1, caml_copy_int64(time_out.tv_nsec));
-
   pair = caml_alloc(1, 0); // Some
-  Store_field(pair, 0, rtime);
+  Store_field(pair, 0, val_timespec(time_out));
 
   result = caml_alloc(1, 0); // Result.Ok
   Store_field(result, 0, pair);
@@ -309,7 +296,7 @@ END:
 
 CAMLprim value time_clock_nanosleep(value clock, value abstime, value time) {
   CAMLparam3(clock, abstime, time);
-  CAMLlocal3(result, pair, rtime);
+  CAMLlocal2(result, pair);
   clockid_t clk;
   struct timespec time_in;
   struct timespec time_out;
@@ -323,8 +310,7 @@ CAMLprim value time_clock_nanosleep(value clock, value abstime, value time) {
       flags = TIMER_ABSTIME;
     }
   }
-  time_in.tv_sec = Int64_val(Field(time, 0));
-  time_in.tv_nsec = Int64_val(Field(time, 1));
+  time_in = timespec_val(time);
 
   caml_release_runtime_system();
   rc = clock_nanosleep(clk, flags, &time_in, &time_out);
@@ -343,12 +329,8 @@ CAMLprim value time_clock_nanosleep(value clock, value abstime, value time) {
   goto END;
 
 INTERRUPTED:
-  rtime = caml_alloc(2, 0);
-  Store_field(rtime, 0, caml_copy_int64(time_out.tv_sec));
-  Store_field(rtime, 1, caml_copy_int64(time_out.tv_nsec));
-
   pair = caml_alloc(1, 0); // Some
-  Store_field(pair, 0, rtime);
+  Store_field(pair, 0, val_timespec(time_out));
 
   result = caml_alloc(1, 0); // Result.Ok
   Store_field(result, 0, pair);
