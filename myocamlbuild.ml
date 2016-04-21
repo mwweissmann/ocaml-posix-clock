@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: be822a4cbf5ee01c7225be8dcb438804) *)
+(* DO NOT EDIT (digest: 62af8416b28d53c705da269805df82cf) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -623,7 +623,11 @@ let package_default =
                       A "-ccopt";
                       A "-Wextra";
                       A "-ccopt";
-                      A "-Wno-unused-parameter"
+                      A "-Wno-unused-parameter";
+                      A "-ccopt";
+                      A "-I";
+                      A "-ccopt";
+                      A "${libdir}"
                    ])
             ]);
           (["oasis_library_posix_clock_cclib"; "link"],
@@ -639,6 +643,6 @@ let conf = {MyOCamlbuildFindlib.no_automatic_syntax = false}
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 
-# 643 "myocamlbuild.ml"
+# 647 "myocamlbuild.ml"
 (* OASIS_STOP *)
 Ocamlbuild_plugin.dispatch dispatch_default;;

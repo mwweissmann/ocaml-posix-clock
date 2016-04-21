@@ -1,6 +1,6 @@
 OASISFormat: 0.4
 Name:        posix-clock
-Version:     0.3.0
+Version:     0.4.0
 Synopsis:    POSIX clocks
 Authors:     Markus W. Weissmann <markus.weissmann@in.tum.de>
 Maintainers: Markus W. Weissmann <markus.weissmann@in.tum.de>
@@ -14,7 +14,7 @@ Library "posix-clock"
   Modules:              Posix_clock
   CSources:             clock.c
   CCLib:                -lrt
-  CCOpt:                -O2 -Wall -Wextra -Wno-unused-parameter
+  CCOpt:                -O2 -Wall -Wextra -Wno-unused-parameter -I $libdir
   BuildDepends:         result, posix-time, unix
 
 Document "api"
