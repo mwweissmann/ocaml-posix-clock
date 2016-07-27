@@ -16,7 +16,7 @@ let print_timespec time =
     (Int64.to_string Timespec.(time.tv_nsec))
 
 let _ =
-  let sec1 = Timespec.create Int64.one Int64.zero in (* 1 second, 0 nanoseconds *)
+  let sec1 = Timespec.create 1L 0L in (* 1 second, 0 nanoseconds *)
 
   nanosleep sec1; (* sleep for sec1 *)
 
